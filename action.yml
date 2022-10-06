@@ -8,13 +8,20 @@ runs:
   using: "composite"
   steps:
     - id: quality-gate-check
-      run: $GITHUB_ACTION_PATH/script/check-quality-gate.sh ${{ inputs.scanMetadataReportFile  }}
+      run: $GITHUB_ACTION_PATH/script/check-quality-gate.sh ${{ inputs.scanMetadataReportFile }} ${{ inputs.onlyInformational }}
       shell: bash
 inputs:
   scanMetadataReportFile:
     description: Location of the scanner metadata report file
     required: false
     default: .scannerwork/report-task.txt
+  onlyInformational:
+    description: |-
+      Whether or not this action should fail hard if the quality gate has warning or failed. If set to true, 
+      this action only returns the quality gate status (which is FAILED or WARN then). If set to false and quality gate 
+      is not passed, this actions fails. Defaults to false.
+    required: false
+    default: 'false'
 outputs:
   quality-gate-status:
     description: >

@@ -4,6 +4,8 @@
 set -e
 set -o pipefail
 
+onlyInformational=$1
+
 gray="\\e[37m"
 blue="\\e[36m"
 red="\\e[31m"
@@ -20,8 +22,9 @@ debug() {
 }
 
 success() { echo -e "${green}✔ $*${reset}"; }
-warn() { echo -e "${yellow}✖ $*${reset}"; exit 1; }
-fail() { echo -e "${red}✖ $*${reset}"; exit 1; }
+warn() { echo -e "${yellow}✖ $*${reset}"; [[ $onlyInformational == "true" ]] && : || exit 1; }
+fail() { echo -e "${red}✖ $*${reset}"; [[ $onlyInformational == "true" ]] && : || exit 1; }
+fatal() { echo -e "${red}✝ $*${reset}"; exit 1; }
 
 ## Enable debug mode.
 enable_debug() {

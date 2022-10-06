@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$(dirname "$0")/common.sh"
+source "$(dirname "$0")/common.sh" $2
 
 if [[ -z "${SONAR_TOKEN}" ]]; then
   echo "Set the SONAR_TOKEN env variable."
@@ -46,12 +46,13 @@ if [[ ${qualityGateStatus} == "OK" ]]; then
    success "Quality Gate has PASSED."
 elif [[ ${qualityGateStatus} == "WARN" ]]; then
    echo '::set-output name=quality-gate-status::WARN'
-   warn "Warnings on Quality Gate."
+   message="Warnings on Quality Gate."
+   warn "$message"
 elif [[ ${qualityGateStatus} == "ERROR" ]]; then
    echo '::set-output name=quality-gate-status::FAILED'
-   fail "Quality Gate has FAILED."
+   message="Quality Gate has FAILED."
+   fail "$message"
 else
    echo '::set-output name=quality-gate-status::FAILED'
-   fail "Quality Gate not set for the project. Please configure the Quality Gate in SonarQube or remove sonarqube-quality-gate action from the workflow."
+   fatal "Quality Gate not set for the project. Please configure the Quality Gate in SonarQube or remove sonarqube-quality-gate action from the workflow."
 fi
-
